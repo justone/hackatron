@@ -9,12 +9,15 @@
                  [compojure "1.2.0"]
                  [hiccup "1.0.5"]
                  [org.danielsz/system "0.1.1"]
-                 [environ "1.0.0"]]
+                 [environ "1.0.0"]
+                 [org.clojure/tools.nrepl "0.2.5"]]
   :plugins [[lein-environ "1.0.0"]]
   :profiles {:dev {:source-paths ["dev"]
                    :env {:http-port 3000}}
              :prod {:env {:http-port 8000
                           :repl-port 8001}
+                    ; unfortunately, deps here don't work
+                    ; https://github.com/technomancy/leiningen/issues/1763
                     :dependencies [[org.clojure/tools.nrepl "0.2.5"]]}
              :uberjar {:aot :all}}
   :main ^:skip-aot example.core
