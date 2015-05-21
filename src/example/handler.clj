@@ -6,8 +6,9 @@
    [example.html :as html]))
 
 (defroutes routes
-  (GET "/" [] (html/index))
-  (route/not-found (html/index)))
+  (GET "/test" [] (html/index))
+  (route/resources "/")
+  (route/not-found "Not Found"))
 
 (def app
   (-> routes 
