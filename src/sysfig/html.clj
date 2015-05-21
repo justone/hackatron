@@ -1,4 +1,4 @@
-(ns example.html
+(ns sysfig.html
   (:require 
    (hiccup [page :refer [html5 include-js include-css]])))
 

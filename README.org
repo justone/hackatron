@@ -2,7 +2,7 @@
 
 ** What is this?
 This project gives you an overview of how you might want to structure a Clojure web app with the [[https://github.com/danielsz/system/][system]] library.
-The example project starts a web server in development mode, and a web server + remote repl in production. 
+The sysfig project starts a web server in development mode, and a web server + remote repl in production. 
 ** Instructions
 *** Development
 Start a repl:

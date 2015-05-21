@@ -1,4 +1,4 @@
-(defproject example "0.1.0-SNAPSHOT"
+(defproject sysfig "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -20,5 +20,5 @@
                     ; https://github.com/technomancy/leiningen/issues/1763
                     :dependencies [[org.clojure/tools.nrepl "0.2.5"]]}
              :uberjar {:aot :all}}
-  :main ^:skip-aot example.core
+  :main ^:skip-aot sysfig.core
   :target-path "target/%s")

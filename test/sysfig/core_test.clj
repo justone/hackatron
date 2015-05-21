@@ -1,6 +1,6 @@
-(ns example.core-test
+(ns sysfig.core-test
   (:require [clojure.test :refer :all]
-            [example.core :refer :all]))
+            [sysfig.core :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."

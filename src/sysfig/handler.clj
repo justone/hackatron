@@ -1,9 +1,9 @@
-(ns example.handler
+(ns sysfig.handler
   (:require
    [compojure.route :as route]
    [compojure.core :refer [defroutes GET]]
    [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
-   [example.html :as html]))
+   [sysfig.html :as html]))
 
 (defroutes routes
   (GET "/test" [] (html/index))
