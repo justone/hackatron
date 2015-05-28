@@ -29,9 +29,7 @@
   :cljsbuild {
               :builds [{:id "dev"
                         :source-paths ["src/cljs"]
-                        :figwheel {
-                                   :websocket-host "silo"
-                                   }
+                        :figwheel true
                         :compiler {:main sysfig.core
                                    :asset-path "cljs/out"
                                    :output-to  "resources/public/cljs/main.js"
