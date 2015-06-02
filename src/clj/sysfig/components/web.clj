@@ -6,7 +6,6 @@
   component/Lifecycle
   (start [component]
     (println "Starting web")
-    (println (:handler handler))
     (let [server (run-server (:handler handler) {:port port})]
       (assoc component :server server)))
   (stop [component]
