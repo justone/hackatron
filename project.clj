@@ -8,6 +8,7 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript  "0.0-3211"]
                  [ring "1.3.1"]
+                 [http-kit "2.1.19"]
                  [ring/ring-defaults "0.1.2"]
                  [compojure "1.2.0"]
                  [hiccup "1.0.5"]
