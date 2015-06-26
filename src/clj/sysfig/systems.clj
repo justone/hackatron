@@ -5,6 +5,7 @@
             (sysfig.components
              [notifier :refer [new-notifier]]
              [handler :refer [new-handler]]
+             [carmine :refer [new-carmine]]
              [web :refer [new-web-server]])
             [environ.core :refer [env]]
             [com.stuartsierra.component :as component]))
@@ -13,7 +14,8 @@
   []
   (component/system-map
     :notifier (new-notifier (env :notification-address))
-    :handler (component/using (new-handler) [:notifier])
+    :handler (component/using (new-handler) [:notifier :carmine])
+    :carmine (new-carmine)
     :web (component/using (new-web-server (Integer. (env :http-port))) [:handler])))
 
 (defn prod-system

@@ -2,11 +2,11 @@
   (:require [com.stuartsierra.component :as component]
             [sysfig.handler :refer [make-handler]]))
 
-(defrecord Handler [notifier handler]
+(defrecord Handler [notifier handler carmine]
   component/Lifecycle
   (start [component]
     (println "Starting handler")
-    (assoc component :handler (make-handler {:notifier notifier})))
+    (assoc component :handler (make-handler {:notifier notifier :carmine carmine})))
   (stop [component]
     (println "Stopping handler")
     (dissoc component :handler)))
