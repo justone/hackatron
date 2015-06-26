@@ -3,6 +3,7 @@
             (system.components
              [repl-server :refer [new-repl-server]])
             (sysfig.components
+             [notifier :refer [new-notifier]]
              [handler :refer [new-handler]]
              [web :refer [new-web-server]])
             [environ.core :refer [env]]
@@ -11,12 +12,14 @@
 (defn dev-system
   []
   (component/system-map
-    :handler (new-handler)
+    :notifier (new-notifier (env :notification-address))
+    :handler (component/using (new-handler) [:notifier])
     :web (component/using (new-web-server (Integer. (env :http-port))) [:handler])))
 
 (defn prod-system
   []
   (component/system-map
-    :handler (new-handler)
+    :notifier (new-notifier (env :notification-address))
+    :handler (component/using (new-handler) [:notifier])
     :web (component/using (new-web-server (Integer. (env :http-port))) [:handler])
     :repl-server (new-repl-server (Integer. (env :repl-port)))))

@@ -7,6 +7,9 @@
 
 (defroutes routes
   (GET "/test" [] (html/index))
+  (GET "/test2" {:keys [services params]} (do
+                                            ((:handler (:notifier services)))
+                                            (str (:address (:notifier services)))))
   (route/resources "/")
   (route/not-found "Not Found"))
 
