@@ -1,14 +1,22 @@
 (ns sysfig.systems
   (:require [system.core :refer [defsystem]]
-            (system.components 
-             [jetty :refer [new-web-server]]
+            (system.components
              [repl-server :refer [new-repl-server]])
+            (sysfig.components
+             [handler :refer [new-handler]]
+             [web :refer [new-web-server]])
             [environ.core :refer [env]]
-            [sysfig.handler :refer [app]]))
+            [com.stuartsierra.component :as component]))
 
-(defsystem dev-system
-  [:web (new-web-server (Integer. (env :http-port)) app)])
+(defn dev-system
+  []
+  (component/system-map
+    :handler (new-handler)
+    :web (component/using (new-web-server (Integer. (env :http-port))) [:handler])))
 
-(defsystem prod-system
-  [:web (new-web-server (Integer. (env :http-port)) app)
-   :repl-server (new-repl-server (Integer. (env :repl-port)))])
+(defn prod-system
+  []
+  (component/system-map
+    :handler (new-handler)
+    :web (component/using (new-web-server (Integer. (env :http-port))) [:handler])
+    :repl-server (new-repl-server (Integer. (env :repl-port)))))

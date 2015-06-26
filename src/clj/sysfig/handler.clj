@@ -10,6 +10,13 @@
   (route/resources "/")
   (route/not-found "Not Found"))
 
-(def app
-  (-> routes 
+(defn wrap-services
+  [f services]
+  (fn [req]
+    (f (assoc req :services services))))
+
+(defn make-handler
+  [services]
+  (-> routes
+      (wrap-services services)
       (wrap-defaults site-defaults)))
