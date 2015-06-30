@@ -1,4 +1,4 @@
-(ns sysfig.components.notifier
+(ns hackatron.components.notifier
   (:require [com.stuartsierra.component :as component]))
 
 (defrecord Notifier [address handler]

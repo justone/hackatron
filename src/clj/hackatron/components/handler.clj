@@ -1,6 +1,6 @@
-(ns sysfig.components.handler
+(ns hackatron.components.handler
   (:require [com.stuartsierra.component :as component]
-            [sysfig.handler :refer [make-handler]]))
+            [hackatron.handler :refer [make-handler]]))
 
 (defrecord Handler [notifier handler carmine]
   component/Lifecycle

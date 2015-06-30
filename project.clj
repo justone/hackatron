@@ -1,4 +1,4 @@
-(defproject sysfig "0.1.0-SNAPSHOT"
+(defproject hackatron "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -32,7 +32,7 @@
               :builds [{:id "dev"
                         :source-paths ["src/cljs"]
                         :figwheel true
-                        :compiler {:main sysfig.core
+                        :compiler {:main hackatron.core
                                    :asset-path "cljs/out"
                                    :output-to  "resources/public/cljs/main.js"
                                    :output-dir "resources/public/cljs/out"
@@ -40,7 +40,7 @@
                         }
                        {:id "prod"
                         :source-paths ["src/cljs"]
-                        :compiler {:main sysfig.core
+                        :compiler {:main hackatron.core
                                    :cache-analysis true
                                    :optimizations :advanced
                                    :output-to  "resources/public/cljs/main.js"
@@ -51,5 +51,5 @@
   :figwheel {
              :css-dirs ["resources/public/css"]
              }
-  :main ^:skip-aot sysfig.core
+  :main ^:skip-aot hackatron.core
   :target-path "target/%s")

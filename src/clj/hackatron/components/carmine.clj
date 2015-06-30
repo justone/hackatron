@@ -1,4 +1,4 @@
-(ns sysfig.components.carmine
+(ns hackatron.components.carmine
   (:require [com.stuartsierra.component :as component]
             [taoensso.carmine :as car :refer [wcar]]))
 

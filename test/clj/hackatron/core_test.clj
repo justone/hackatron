@@ -1,6 +1,6 @@
-(ns sysfig.core-test
+(ns hackatron.core-test
   (:require [clojure.test :refer :all]
-            [sysfig.core :refer :all]))
+            [hackatron.core :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."

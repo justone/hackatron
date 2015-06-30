@@ -1,8 +1,8 @@
-(ns sysfig.systems
+(ns hackatron.systems
   (:require [system.core :refer [defsystem]]
             (system.components
              [repl-server :refer [new-repl-server]])
-            (sysfig.components
+            (hackatron.components
              [notifier :refer [new-notifier]]
              [handler :refer [new-handler]]
              [carmine :refer [new-carmine]]

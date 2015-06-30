@@ -1,8 +1,8 @@
-(ns sysfig.core
+(ns hackatron.core
   (:gen-class)
   (:require 
    [reloaded.repl :refer [system init start stop go reset]]
-   [sysfig.systems :refer [prod-system]]))
+   [hackatron.systems :refer [prod-system]]))
 
 (defn -main
   "Start a production system."
