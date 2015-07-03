@@ -1,14 +1,15 @@
 (ns hackatron.components.notifier
-  (:require [com.stuartsierra.component :as component]))
+  (:require [com.stuartsierra.component :as component]
+            [hackatron.notifier :refer [send-email]]))
 
-(defrecord Notifier [address handler]
+(defrecord Notifier [auth handler]
   component/Lifecycle
   (start [component]
-    (println (str "Starting notifier: " address))
-    (assoc component :handler #(println (str "Sending to address: " address))))
+    (println "Starting notifier")
+    (assoc component :handler #(send-email auth %)))
   (stop [component]
-    (println (str "Stopping notifier: " address))
+    (println "Stopping notifier")
     (assoc component :notifier nil)))
 
-(defn new-notifier [address]
-  (map->Notifier {:address address}))
+(defn new-notifier [auth]
+  (map->Notifier {:auth auth}))

@@ -9,9 +9,9 @@
 
 (defroutes routes
   (GET "/test" [] (html/index))
-  (GET "/test2" {:keys [services params]} (do
-                                            ((:notifier services))
-                                            (str (:address (:notifier services)))))
+  (GET "/send" {:keys [services params]} (do
+                                            ((:notifier services) {:to "nate@endot.org" :from "nate@endot.org" :subject "Test email 2" :text "Test Email" :html "<h1>Test Email</h1>"})
+                                            (response "sent")))
   (GET "/inc" {:keys [services params]} (do
                                           (wcar (:carmine services) (car/set "another" {:foo "bar" :set #{true false}}))
                                           (response "incremented")))

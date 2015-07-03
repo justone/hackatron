@@ -13,7 +13,7 @@
 (defn dev-system
   []
   (component/system-map
-    :notifier (new-notifier (env :notification-address))
+    :notifier (new-notifier {:api_user (env :sendgrid-user) :api_key (env :sendgrid-password)})
     :handler (component/using (new-handler) [:notifier :carmine])
     :carmine (new-carmine)
     :web (component/using (new-web-server (Integer. (env :http-port))) [:handler])))
