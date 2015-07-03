@@ -1,11 +1,11 @@
-(ns sysfig.handler
+(ns hackatron.handler
   (:require
    [compojure.route :as route]
    [compojure.core :refer [defroutes GET]]
    [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
    [ring.util.response :refer [response]]
    [taoensso.carmine :as car :refer [wcar]]
-   [sysfig.html :as html]))
+   [hackatron.html :as html]))
 
 (defroutes routes
   (GET "/test" [] (html/index))
