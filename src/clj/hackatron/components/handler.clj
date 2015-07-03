@@ -6,7 +6,9 @@
   component/Lifecycle
   (start [component]
     (println "Starting handler")
-    (assoc component :handler (make-handler {:notifier notifier :carmine carmine})))
+    (let [services {:notifier (:handler notifier) :carmine (:conn carmine)}
+          handler (make-handler services)]
+      (assoc component :handler handler)))
   (stop [component]
     (println "Stopping handler")
     (dissoc component :handler)))

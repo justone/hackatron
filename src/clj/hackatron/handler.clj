@@ -10,10 +10,10 @@
 (defroutes routes
   (GET "/test" [] (html/index))
   (GET "/test2" {:keys [services params]} (do
-                                            ((:handler (:notifier services)))
+                                            ((:notifier services))
                                             (str (:address (:notifier services)))))
   (GET "/inc" {:keys [services params]} (do
-                                          (wcar (:conn (:carmine services)) (car/set "another" {:foo "bar" :set #{true false}}))
+                                          (wcar (:carmine services) (car/set "another" {:foo "bar" :set #{true false}}))
                                           (response "incremented")))
   (route/resources "/")
   (route/not-found "Not Found"))
