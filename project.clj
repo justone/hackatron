@@ -33,6 +33,7 @@
               :builds [{:id "dev"
                         :source-paths ["src/cljs"]
                         :figwheel true
+                        ; :figwheel { :websocket-host "silo" }
                         :compiler {:main hackatron.core
                                    :asset-path "cljs/out"
                                    :output-to  "resources/public/cljs/main.js"
@@ -51,6 +52,7 @@
               }
   :figwheel {
              :css-dirs ["resources/public/css"]
+             :server-port 13449
              }
   :main ^:skip-aot hackatron.core
   :target-path "target/%s")
