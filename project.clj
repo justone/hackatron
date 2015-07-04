@@ -5,7 +5,9 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :source-paths ["src/clj"]
   :test-paths ["test/clj"]
-  :dependencies [[org.clojure/clojure "1.6.0"]
+  :dependencies [
+                 ;; clj
+                 [org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript  "0.0-3211"]
                  [ring "1.3.1"]
                  [http-kit "2.1.19"]
@@ -16,7 +18,12 @@
                  [environ "1.0.0"]
                  [org.clojure/tools.nrepl "0.2.5"]
                  [com.taoensso/carmine "2.11.1"]
-                 [io.forward/sendgrid-clj "1.0"]]
+                 [io.forward/sendgrid-clj "1.0"]
+
+                 ;; cljs
+                 [org.omcljs/om "0.8.8"]
+                 [racehub/om-bootstrap "0.5.1"]
+                 [prismatic/om-tools "0.3.11"]]
   :plugins [[lein-environ "1.0.0"]
             [lein-cljsbuild  "1.0.5"]
             [lein-figwheel  "0.3.3"]]
