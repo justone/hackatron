@@ -42,7 +42,7 @@
               :builds [{:id "dev"
                         :source-paths ["src/cljs"]
                         :figwheel {
-                                   ; :websocket-host "silo"
+                                   :websocket-host ~(or (System/getenv "FIG_HOST") "localhost")
                                    :on-jsload "hackatron.core/show-gui!"
                                    }
                         :compiler {:main hackatron.core
