@@ -3,24 +3,28 @@
    [compojure.route :as route]
    [compojure.core :refer [defroutes GET POST]]
    [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
-   [ring.util.response :refer [response]]
+   [ring.util.response :refer [response redirect]]
    [taoensso.timbre    :as timbre :refer (tracef debugf infof warnf errorf)]
    [taoensso.carmine :as car :refer [wcar]]
-   [reloaded.repl :refer [system]]
-   [hackatron.html :as html]))
+   [reloaded.repl :refer [system]]))
 
 (defroutes routes
-  (GET "/test" [] (html/index))
+  ;; load the UI
+  (GET "/" [] (redirect "/index.html"))
+
+  ;; test routes
   (GET "/send" {:keys [services params]} (do
                                             ((:notifier services) {:to "nate@endot.org" :from "nate@endot.org" :subject "Test email 2" :text "Test Email" :html "<h1>Test Email</h1>"})
                                             (response "sent")))
   (GET "/inc" {:keys [services params]} (do
                                           (wcar (:carmine services) (car/set "another" {:foo "bar" :set #{true false}}))
                                           (response "incremented")))
+
   ;; sente specific
   (GET  "/dump"  req (str @(:connected-uids (:sente system))))
   (GET  "/chsk"  req ((:ring-ajax-get-or-ws-handshake (:sente system)) req))
   (POST "/chsk"  req ((:ring-ajax-post (:sente system)) req))
+
   ;; login handler
   ; (POST "/login" req (login! req))
   (route/resources "/")
