@@ -19,8 +19,11 @@
                  [org.clojure/tools.nrepl "0.2.5"]
                  [com.taoensso/carmine "2.11.1"]
                  [io.forward/sendgrid-clj "1.0"]
+                 [com.taoensso/sente "1.5.0"]
+                 [com.cognitect/transit-clj "0.8.275"]
 
                  ;; cljs
+                 [com.cognitect/transit-cljs "0.8.220"]
                  [org.omcljs/om "0.8.8"]
                  [racehub/om-bootstrap "0.5.1"]
                  [prismatic/om-tools "0.3.11"]]
@@ -39,8 +42,10 @@
   :cljsbuild {
               :builds [{:id "dev"
                         :source-paths ["src/cljs"]
-                        :figwheel true
-                        ; :figwheel { :websocket-host "silo" }
+                        :figwheel {
+                                   ; :websocket-host "silo"
+                                   :on-jsload "hackatron.core/show-gui!"
+                                   }
                         :compiler {:main hackatron.core
                                    :asset-path "cljs/out"
                                    :output-to  "resources/public/cljs/main.js"
