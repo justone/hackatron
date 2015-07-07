@@ -6,7 +6,7 @@
             (hackatron.components
              [notifier :refer [new-notifier]]
              [handler :refer [new-handler]]
-             [carmine :refer [new-carmine]]
+             [data :refer [new-data]]
              [web :refer [new-web-server]])
             [environ.core :refer [env]]
             [taoensso.sente.server-adapters.http-kit :refer (sente-web-server-adapter)]
@@ -17,8 +17,8 @@
   []
   (component/system-map
     :notifier (new-notifier {:api_user (env :sendgrid-user) :api_key (env :sendgrid-password)})
-    :handler (component/using (new-handler) [:notifier :carmine])
-    :carmine (new-carmine)
+    :handler (component/using (new-handler) [:notifier :data])
+    :data (new-data)
     :web (component/using (new-web-server (Integer. (env :http-port))) [:handler])
     :sente (new-channel-sockets event-msg-handler* sente-web-server-adapter)))
 

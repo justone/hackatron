@@ -5,7 +5,7 @@
    [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
    [ring.util.response :refer [response redirect]]
    [taoensso.timbre    :as timbre :refer (tracef debugf infof warnf errorf)]
-   [taoensso.carmine :as car :refer [wcar]]
+   [hackatron.data :refer :all]
    [reloaded.repl :refer [system]]))
 
 (defroutes routes
@@ -17,8 +17,8 @@
                                             ((:notifier services) {:to "nate@endot.org" :from "nate@endot.org" :subject "Test email 2" :text "Test Email" :html "<h1>Test Email</h1>"})
                                             (response "sent")))
   (GET "/inc" {:keys [services params]} (do
-                                          (wcar (:carmine services) (car/set "another" {:foo "bar" :set #{true false}}))
-                                          (response "incremented")))
+                                          (dset (:data services) "other" {:foo "bar" :set #{true false}})
+                                          (response "set")))
 
   ;; sente specific
   (GET  "/dump"  req (str @(:connected-uids (:sente system))))

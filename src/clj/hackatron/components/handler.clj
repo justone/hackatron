@@ -2,11 +2,11 @@
   (:require [com.stuartsierra.component :as component]
             [hackatron.handler :refer [make-handler]]))
 
-(defrecord Handler [notifier handler carmine]
+(defrecord Handler [notifier handler data]
   component/Lifecycle
   (start [component]
     (println "Starting handler")
-    (let [services {:notifier (:handler notifier) :carmine (:conn carmine)}
+    (let [services {:notifier (:handler notifier) :data (:data data)}
           handler (make-handler services)]
       (assoc component :handler handler)))
   (stop [component]
