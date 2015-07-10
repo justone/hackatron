@@ -7,7 +7,10 @@
 (.log js/console  "Hello from Clojurescript!")
 
 (defonce actions (chan))
-(defonce app-state (atom {}))
+(defonce app-state (atom {
+                      :name ""
+                      :email ""
+                      }))
 
 ;; set up sente
 (let [chsk-type :auto
