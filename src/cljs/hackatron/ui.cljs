@@ -3,21 +3,29 @@
             [om.core :as om]
             [om-bootstrap.button :as obb]
             [om-bootstrap.input :as obi]
-            [om-tools.dom :as dom :include-macros true]))
+            [om-tools.dom :as dom :include-macros true]
+            [cljs.core.async :refer [put!]]))
 
 (defn handle-change
   [e cursor k]
   (om/update! cursor [k] (.. e -target -value)))
 
-(defn main-view [app owner]
+(defn login [state owner]
+  (reify
+    om/IDisplayName (display-name [this] "LoginView")
+    om/IRender
+    (render [this]
+      (let [actions (om/get-shared owner :actions)
+            {:keys [name email]} state]
+        (dom/div
+          (obi/input {:type "text" :placeholder "Name" :value name :on-change #(handle-change % state :name)})
+          (obi/input {:type "text" :placeholder "Email" :value email :on-change #(handle-change % state :email)})
+          (obb/button { :bs-style "success" :on-click (fn [e] (.preventDefault e) (put! actions [:hackatron/login {:foo "bar"}]) nil) } "Login"))))))
+
+(defn main-view [state owner]
   (reify
     om/IDisplayName (display-name [this] "MainView")
     om/IRender
     (render [this]
-      (let [sender (om/get-shared owner :send)
-            {:keys [name email]} app]
-        (dom/div
-          (obi/input {:type "text" :placeholder "Name" :value name :on-change #(handle-change % app :name)})
-          (obi/input {:type "text" :placeholder "Email" :value email :on-change #(handle-change % app :email)})
-          (obb/button { :bs-style "success" :on-click (fn [e] (.preventDefault e) (do (sender [:hackatron/button {:foo "bar"}]) (.log js/console "Button pushed!")) nil) } "Button!")
-          (obb/button { :bs-style "success" :on-click (fn [e] (.preventDefault e) (do (sender [:hackatron/button2 {:bar "foo"}] 5000 (fn [cb-reply] (.log js/console "Callback reply: %s" (str cb-reply)))) (.log js/console "Button 2 pushed!")) nil) } "Button 2!"))))))
+      (case (:state state)
+        :login (om/build login state)))))

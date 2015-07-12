@@ -1,16 +1,18 @@
 (ns hackatron.core
-  (:require [om.core :as om]
+  (:require [hackatron.util :as util]
+            [om.core :as om]
             [hackatron.ui :as ui]
             [taoensso.sente :as sente :refer (cb-success?)]
-            [cljs.core.async :refer [chan <!]]))
+            [cljs.core.async :refer [chan <! put!]]))
 
 (.log js/console  "Hello from Clojurescript!")
 
 (defonce actions (chan))
 (defonce app-state (atom {
-                      :name ""
-                      :email ""
-                      }))
+                          :state :login
+                          :name ""
+                          :email ""
+                          }))
 
 ;; set up sente
 (let [chsk-type :auto
@@ -30,7 +32,7 @@
   [{:as ev-msg :keys [event]}]
   (.log js/console "Unhandled event: %s" (str event)))
 
-(def router_ (atom nil))
+(defonce router_ (atom nil))
 (defn stop-router! [] (when-let [stop-f @router_] (stop-f)))
 (defn start-router! []
   (stop-router!)
@@ -45,8 +47,21 @@
     {:target (. js/document (getElementById "app"))
      :shared {:actions actions :send chsk-send!}}))
 
+(defn action-dispatcher [act]
+  (util/log (str "acting on " (str act))))
+
+;; TODO: integrate into dispatcher
+; (sender [:hackatron/button {:foo "bar"}])
+; (sender [:hackatron/button2 {:bar "foo"}] 5000 (fn [cb-reply] (.log js/console "Callback reply: %s" (str cb-reply))))
+
+(defonce actionchan_ (atom nil))
+(defn stop-action-dispatcher! [] (when-let [ch @actionchan_] (put! actions [:stop])))
+(defn start-action-dispatcher! []
+  (stop-action-dispatcher!)
+  (reset! actionchan_ (util/action-loop action-dispatcher actions)))
+
 (defn start! []
-  (stop-router!)
+  (start-action-dispatcher!)
   (show-gui!)
   (start-router!))
 
