@@ -5,7 +5,7 @@
 (defrecord WebServer [port server handler]
   component/Lifecycle
   (start [component]
-    (println "Starting web")
+    (println (str "Starting web on port " port))
     (let [server (run-server (:handler handler) {:port port})]
       (assoc component :server server)))
   (stop [component]
