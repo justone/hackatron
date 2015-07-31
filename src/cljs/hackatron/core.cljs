@@ -47,8 +47,19 @@
     {:target (. js/document (getElementById "app"))
      :shared {:actions actions :send chsk-send!}}))
 
-(defn action-dispatcher [act]
-  (util/log (str "acting on " (str act))))
+(defn dispatcher-fn [[topic message]]
+  (util/log (str "acting on " (str topic)))
+  [topic])
+
+(defmulti action-dispatcher! dispatcher-fn)
+
+(defmethod action-dispatcher! :default
+  [[topic message]]
+  (util/log (str "no dispatching for " topic)))
+
+(defmethod action-dispatcher! [:hackatron/login]
+  [[topic message :as act]]
+  (util/log (str "Logging in " (str act))))
 
 ;; TODO: integrate into dispatcher
 ; (sender [:hackatron/button {:foo "bar"}])
@@ -58,7 +69,7 @@
 (defn stop-action-dispatcher! [] (when-let [ch @actionchan_] (put! actions [:stop])))
 (defn start-action-dispatcher! []
   (stop-action-dispatcher!)
-  (reset! actionchan_ (util/action-loop action-dispatcher actions)))
+  (reset! actionchan_ (util/action-loop action-dispatcher! actions)))
 
 (defn start! []
   (start-action-dispatcher!)
