@@ -10,6 +10,16 @@
   [e cursor k]
   (om/update! cursor [k] (.. e -target -value)))
 
+(defn input-text
+  "An input text field, with a handler."
+  [name value handler]
+  (obi/input {:type "text" :placeholder name :value value :on-change handler}))
+
+(defn input-button
+  "An input button, with a handler.  Prevents default event handling."
+  [text handler]
+  (obb/button { :bs-style "success" :on-click (fn [e] (.preventDefault e) (handler) nil) } text))
+
 (defn login [state owner]
   (reify
     om/IDisplayName (display-name [this] "LoginView")
@@ -18,9 +28,10 @@
       (let [actions (om/get-shared owner :actions)
             {:keys [name email]} state]
         (dom/div
-          (obi/input {:type "text" :placeholder "Name" :value name :on-change #(handle-change % state :name)})
-          (obi/input {:type "text" :placeholder "Email" :value email :on-change #(handle-change % state :email)})
-          (obb/button { :bs-style "success" :on-click (fn [e] (.preventDefault e) (put! actions [:hackatron/login {:foo "bar"}]) nil) } "Login"))))))
+          (dom/h3 "Login")
+          (input-text "Name" name #(handle-change % state :name))
+          (input-text "Email" email #(handle-change % state :email))
+          (input-button "Login" #(put! actions [:hackatron/login {:foo "bar"}])))))))
 
 (defn main-view [state owner]
   (reify
