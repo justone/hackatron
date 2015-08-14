@@ -5,7 +5,8 @@
             [taoensso.sente :as sente :refer (cb-success?)]
             [cljs.core.async :refer [chan <! put!]]))
 
-(.log js/console  "Hello from Clojurescript!")
+(enable-console-print!)
+(print "Hello from Clojurescript!")
 
 (defonce actions (chan))
 (defonce app-state (atom {
