@@ -29,7 +29,7 @@
                  [prismatic/om-tools "0.3.11"]]
   :plugins [[lein-environ "1.0.0"]
             [lein-cljsbuild  "1.0.5"]
-            [lein-figwheel  "0.3.3"]]
+            [lein-figwheel  "0.3.5"]]
   :clean-targets ^{:protect false} [:target-path "resources/public/cljs" "resources/public/cljs/out-prod"]
   :profiles {:dev {:source-paths ["dev"]
                    :env {:http-port 3000}}
@@ -65,6 +65,7 @@
   :figwheel {
              :css-dirs ["resources/public/css"]
              :server-port 13449
+             :nrepl-port 7888
              }
   :main ^:skip-aot hackatron.core
   :target-path "target/%s")
