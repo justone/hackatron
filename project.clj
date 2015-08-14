@@ -13,6 +13,7 @@
                  [http-kit "2.1.19"]
                  [ring/ring-defaults "0.1.2"]
                  [compojure "1.2.0"]
+                 [hiccup "1.0.5"]
                  [org.danielsz/system "0.1.8"]
                  [environ "1.0.0"]
                  [org.clojure/tools.nrepl "0.2.5"]

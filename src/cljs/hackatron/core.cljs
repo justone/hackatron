@@ -59,7 +59,15 @@
 
 (defmethod action-dispatcher! [:hackatron/login]
   [[topic message :as act]]
-  (util/log (str "Logging in " (str act))))
+  (do
+    (util/log (str "Sending login email to " (:email @app-state)))
+    (util/log (str @chsk-state))
+    (sente/ajax-call "/send_login_email"
+                     {:method :post
+                      :params {:email-address  (str (:email @app-state))
+                               :csrf-token (:csrf-token @chsk-state)}}
+                     (fn [ajax-resp]
+                       (print (str "Ajax login response: %s" ajax-resp))))))
 
 ;; TODO: integrate into dispatcher
 ; (sender [:hackatron/button {:foo "bar"}])

@@ -4,13 +4,22 @@
    [compojure.core :refer [defroutes GET POST]]
    [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
    [ring.util.response :refer [response redirect]]
+   [ring.middleware.session.cookie :refer [cookie-store]]
    [taoensso.timbre    :as timbre :refer (tracef debugf infof warnf errorf)]
    [hackatron.data :refer :all]
+   [hackatron.html :as html]
    [reloaded.repl :refer [system]]))
+
+(defn send-login-email! [req]
+  (println req)
+  {:status 200})
 
 (defroutes routes
   ;; load the UI
-  (GET "/" [] (redirect "/index.html"))
+  (GET "/" [] (html/index))
+
+  ;; handle login
+  (POST "/send_login_email" req (send-login-email! req))
 
   ;; test routes
   (GET "/send" {:keys [services params]} (do
@@ -37,9 +46,13 @@
 
 (defn make-handler
   [services]
-  (-> routes
-      (wrap-services services)
-      (wrap-defaults site-defaults)))
+  (let [ring-defaults-config
+        (-> site-defaults
+            (assoc-in [:security :anti-forgery] {:read-token (fn [req] (-> req :params :csrf-token))})
+            (assoc-in [:session :store] (cookie-store {:key "1234567890987654"})))]
+    (-> routes
+        (wrap-services services)
+        (wrap-defaults ring-defaults-config))))
 
 
 (defmulti event-msg-handler :id) ; Dispatch on event-id

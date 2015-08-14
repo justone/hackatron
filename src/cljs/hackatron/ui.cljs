@@ -31,7 +31,7 @@
           (dom/h3 "Login")
           (input-text "Name" name #(handle-change % state :name))
           (input-text "Email" email #(handle-change % state :email))
-          (input-button "Login" #(put! actions [:hackatron/login {:foo "bar"}])))))))
+          (input-button "Send Login Email" #(put! actions [:hackatron/login {:foo "bar"}])))))))
 
 (defn main-view [state owner]
   (reify
