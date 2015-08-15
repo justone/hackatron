@@ -10,6 +10,7 @@
    [hackatron.html :as html]
    [reloaded.repl :refer [system]]))
 
+; TODO: check for validity of email domain
 (defn send-login-email! [req]
   (println req)
   {:status 200})
@@ -44,6 +45,7 @@
   (fn [req]
     (f (assoc req :services services))))
 
+; TODO: randomly generate key
 (defn make-handler
   [services]
   (let [ring-defaults-config
