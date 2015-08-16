@@ -68,14 +68,14 @@
 
 (defmulti event-msg-handler :id) ; Dispatch on event-id
 (defn     event-msg-handler* [{:as ev-msg :keys [id ?data event]}]
-  (debugf "Event: %s" event)
+  ; (debugf "Event: %s" event)
   (event-msg-handler ev-msg))
 
 (defmethod event-msg-handler :default ; Fallback
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
   (let [session (:session ring-req)
         uid     (:uid     session)]
-    (debugf "Unhandled event: %s" event)
-    (debugf "from: %s" (:session (:ring-req ev-msg)))
+    ; (debugf "Unhandled event: %s" event)
+    ; (debugf "from: %s" (:session (:ring-req ev-msg)))
     (when ?reply-fn
       (?reply-fn {:umatched-event-as-echoed-from-from-server event}))))
