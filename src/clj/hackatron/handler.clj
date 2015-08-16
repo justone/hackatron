@@ -6,13 +6,18 @@
    [ring.util.response :refer [response redirect]]
    [ring.middleware.session.cookie :refer [cookie-store]]
    [taoensso.timbre    :as timbre :refer (tracef debugf infof warnf errorf)]
-   [hackatron.data :refer :all]
+   [hackatron.data :refer [dset]]
    [hackatron.html :as html]
+   [hackatron.utils :as utils]
    [reloaded.repl :refer [system]]))
 
 ; TODO: check for validity of email domain
-(defn send-login-email! [req]
-  (println req)
+(defn send-login-email! [params data notifier]
+  (let [login-token (utils/random-string 32)
+        email (:email-address params)]
+    (do
+      (dset data (str "login:" login-token) email)
+      (notifier :login-email email {:token login-token})))
   {:status 200})
 
 (defroutes routes
@@ -20,7 +25,11 @@
   (GET "/" [] (html/index))
 
   ;; handle login
-  (POST "/send_login_email" req (send-login-email! req))
+  (POST "/send_login_email" {:keys [services params]}
+        (send-login-email!
+          params
+          (:data services)
+          (:notifier services)))
 
   ;; test routes
   (GET "/send" {:keys [services params]} (do
@@ -67,5 +76,6 @@
   (let [session (:session ring-req)
         uid     (:uid     session)]
     (debugf "Unhandled event: %s" event)
+    (debugf "from: %s" (:session (:ring-req ev-msg)))
     (when ?reply-fn
       (?reply-fn {:umatched-event-as-echoed-from-from-server event}))))

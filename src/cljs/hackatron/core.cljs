@@ -11,7 +11,6 @@
 (defonce actions (chan))
 (defonce app-state (atom {
                           :state :login
-                          :name ""
                           :email ""
                           }))
 

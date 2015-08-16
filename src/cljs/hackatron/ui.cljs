@@ -26,10 +26,9 @@
     om/IRender
     (render [this]
       (let [actions (om/get-shared owner :actions)
-            {:keys [name email]} state]
+            {:keys [email]} state]
         (dom/div
-          (dom/h3 "Login")
-          (input-text "Name" name #(handle-change % state :name))
+          (dom/h3 "Login to Hackatron")
           (input-text "Email" email #(handle-change % state :email))
           (input-button "Send Login Email" #(put! actions [:hackatron/login {:foo "bar"}])))))))
 
