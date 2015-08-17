@@ -6,7 +6,7 @@
    [ring.util.response :refer [response redirect]]
    [ring.middleware.session.cookie :refer [cookie-store]]
    [taoensso.timbre    :as timbre :refer (tracef debugf infof warnf errorf)]
-   [hackatron.data :refer [dset]]
+   [hackatron.data :refer [dset dget]]
    [hackatron.html :as html]
    [hackatron.utils :as utils]
    [reloaded.repl :refer [system]]))
@@ -20,6 +20,12 @@
       (notifier :login-email email {:token login-token})))
   {:status 200})
 
+; TODO: remove the login token once used
+(defn login! [session params data]
+  (let [login-token (:login-token params)]
+    (when-let [email (dget data (str "login:" login-token))]
+      {:status 200 :session  (assoc session :uid email)})))
+
 (defroutes routes
   ;; load the UI
   (GET "/" [] (html/index))
@@ -30,6 +36,11 @@
           params
           (:data services)
           (:notifier services)))
+  (POST "/login" {:keys [session services params]}
+        (login!
+          session
+          params
+          (:data services)))
 
   ;; test routes
   (GET "/send" {:keys [services params]} (do

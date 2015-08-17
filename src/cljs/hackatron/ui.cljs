@@ -32,10 +32,19 @@
           (input-text "Email" email #(handle-change % state :email))
           (input-button "Send Login Email" #(put! actions [:hackatron/login {:foo "bar"}])))))))
 
+(defn top [state owner]
+  (reify
+    om/IDisplayName (display-name [this] "TopView")
+    om/IRender
+    (render [this]
+      (dom/div
+        (dom/h3 "Logged in!")))))
+
 (defn main-view [state owner]
   (reify
     om/IDisplayName (display-name [this] "MainView")
     om/IRender
     (render [this]
       (case (:state state)
-        :login (om/build login state)))))
+        :login (om/build login state)
+        :logged-in (om/build top state)))))

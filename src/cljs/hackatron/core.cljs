@@ -1,6 +1,7 @@
 (ns hackatron.core
   (:require [hackatron.util :as util]
             [om.core :as om]
+            [clojure.string :as string]
             [hackatron.ui :as ui]
             [taoensso.sente :as sente :refer (cb-success?)]
             [cljs.core.async :refer [chan <! put!]]))
@@ -79,9 +80,33 @@
   (stop-action-dispatcher!)
   (reset! actionchan_ (util/action-loop action-dispatcher! actions)))
 
+(defn login! []
+  (let [uid (:uid @chsk-state)
+        url-hash (.-hash (.-location js/document))
+        login-token (string/replace url-hash #"#" "")
+        _ (set! (.-hash (.-location js/document)) "")]
+    (if (= uid :taoensso.sente/nil-uid)
+      (when (seq url-hash)
+        (println "attempting to log in!")
+        (sente/ajax-call "/login"
+                         {:method :post
+                          :params {:login-token login-token
+                                   :csrf-token (:csrf-token @chsk-state)}}
+                         (fn [ajax-resp]
+                           (when (= (:?status ajax-resp) 200)
+                             (println "logged in now!")
+                             (swap! app-state assoc :state :logged-in :uid uid)
+                             (remove-watch chsk-state :login)))))
+      (do
+        (println "already logged in!")
+        (swap! app-state assoc :state :logged-in :uid uid)
+        (remove-watch chsk-state :login)))))
+
 (defn start! []
   (start-action-dispatcher!)
-  (show-gui!)
-  (start-router!))
+  (start-router!)
+  ;; must watch chsk-state because it doesn't connect right away
+  (add-watch chsk-state :login login!)
+  (show-gui!))
 
 (start!)
