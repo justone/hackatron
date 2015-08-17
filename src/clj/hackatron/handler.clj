@@ -54,13 +54,14 @@
   (fn [req]
     (f (assoc req :services services))))
 
-; TODO: randomly generate key
+; TODO: allow session key to be specified in env
+(defonce session-key (utils/random-string 16))
 (defn make-handler
   [services]
   (let [ring-defaults-config
         (-> site-defaults
             (assoc-in [:security :anti-forgery] {:read-token (fn [req] (-> req :params :csrf-token))})
-            (assoc-in [:session :store] (cookie-store {:key "1234567890987654"})))]
+            (assoc-in [:session :store] (cookie-store {:key session-key})))]
     (-> routes
         (wrap-services services)
         (wrap-defaults ring-defaults-config))))
