@@ -37,8 +37,11 @@
     om/IDisplayName (display-name [this] "TopView")
     om/IRender
     (render [this]
-      (dom/div
-        (dom/h3 "Logged in!")))))
+      (let [actions (om/get-shared owner :actions)]
+        (dom/div
+          (dom/h3 "Logged in!")
+          (dom/h2 (str "Count is: " (:count state)))
+          (input-button "Add" #(put! actions [:hackatron/add])))))))
 
 (defn main-view [state owner]
   (reify

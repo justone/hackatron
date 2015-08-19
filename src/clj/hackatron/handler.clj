@@ -11,6 +11,9 @@
    [hackatron.utils :as utils]
    [reloaded.repl :refer [system]]))
 
+; temporary server side state
+(defonce server-state (atom {:count 0}))
+
 ; TODO: check for validity of email domain
 (defn send-login-email! [params data notifier]
   (let [login-token (utils/random-string 32)
@@ -82,6 +85,16 @@
 (defn     event-msg-handler* [{:as ev-msg :keys [id ?data event]}]
   ; (debugf "Event: %s" event)
   (event-msg-handler ev-msg))
+
+(defmethod event-msg-handler :hackatron/add
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
+  (let [session (:session ring-req)
+        uid     (:uid     session)
+        sender  (:chsk-send! (:sente system))
+        uids    (:any @(:connected-uids (:sente system)))]
+    (debugf "Add event called: %s" @(:connected-uids (:sente system)))
+    (swap! server-state (fn [prev] (update-in prev [:count] inc)))
+    (dorun (map #(sender % [:hackatron/state @server-state]) uids))))
 
 (defmethod event-msg-handler :default ; Fallback
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
