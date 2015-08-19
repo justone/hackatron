@@ -96,6 +96,7 @@
                            (when (= (:?status ajax-resp) 200)
                              (println "logged in now!")
                              (swap! app-state assoc :state :logged-in :uid uid)
+                             (sente/chsk-reconnect! chsk)
                              (remove-watch chsk-state :login)))))
       (do
         (println "already logged in!")
