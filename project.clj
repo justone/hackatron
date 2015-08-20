@@ -17,9 +17,9 @@
                  [org.danielsz/system "0.1.8"]
                  [environ "1.0.0"]
                  [org.clojure/tools.nrepl "0.2.5"]
-                 [com.taoensso/carmine "2.11.1"]
                  [io.forward/sendgrid-clj "1.0"]
-                 [com.taoensso/sente "1.5.0"]
+                 [com.taoensso/sente "1.6.0"]
+                 [com.taoensso/carmine "2.11.1"]
                  [com.cognitect/transit-clj "0.8.275"]
 
                  ;; cljs
