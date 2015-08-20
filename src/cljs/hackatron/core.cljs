@@ -37,7 +37,7 @@
 
 (defmethod event-msg-handler [:hackatron/state]
   [[event data]]
-  (.log js/console "Update to state!" (str event))
+  ; (.log js/console "Update to state!" (str event))
   (swap! app-state assoc :count (:count data)))
 
 (defmethod event-msg-handler :default ; Fallback
@@ -60,7 +60,7 @@
      :shared {:actions actions :send chsk-send!}}))
 
 (defn dispatcher-fn [[topic message]]
-  (util/log (str "acting on " (str topic)))
+  ; (util/log (str "acting on " (str topic)))
   [topic])
 
 (defmulti action-dispatcher! dispatcher-fn)
