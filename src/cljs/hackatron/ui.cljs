@@ -39,9 +39,10 @@
     (render [this]
       (let [actions (om/get-shared owner :actions)]
         (dom/div
-          (dom/h3 (str "Logged in as " (:uid state)))
+          (dom/h3 (str "Logged in as " (:uid state) "."))
           (dom/h2 (str "Count is: " (:count state)))
-          (input-button "Add" #(put! actions [:hackatron/add])))))))
+          (input-button "Add" #(put! actions [:hackatron/add]))
+          (input-button "Fetch" #(put! actions [:hackatron/get])))))))
 
 (defn main-view [state owner]
   (reify

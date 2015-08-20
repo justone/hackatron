@@ -89,12 +89,19 @@
 (defmethod event-msg-handler :hackatron/add
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
   (let [session (:session ring-req)
-        uid     (:uid     session)
         sender  (:chsk-send! (:sente system))
         uids    (:any @(:connected-uids (:sente system)))]
     (debugf "Add event called: %s" @(:connected-uids (:sente system)))
     (swap! server-state (fn [prev] (update-in prev [:count] inc)))
     (dorun (map #(sender % [:hackatron/state @server-state]) uids))))
+
+(defmethod event-msg-handler :hackatron/get
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
+  (let [session (:session ring-req)
+        uid     (:uid     session)
+        sender  (:chsk-send! (:sente system))]
+    (debugf "Get event called: %s" @(:connected-uids (:sente system)))
+    (sender uid [:hackatron/state @server-state])))
 
 (defmethod event-msg-handler :default ; Fallback
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
