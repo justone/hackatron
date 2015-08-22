@@ -6,10 +6,10 @@
             [taoensso.sente :as sente :refer (cb-success?)]
             [cljs.core.async :refer [chan <! put!]]))
 
+; make printing easier
 (enable-console-print!)
-(print "Hello from Clojurescript!")
 
-(defonce actions (chan))
+; all the state
 (defonce app-state (atom {
                           :state :login
                           :email ""
@@ -24,11 +24,12 @@
   (def chsk-state state)   ; Watchable, read-only atom
   )
 
-(defn event-dispatcher-fn [[topic data]]
-  ; (util/log (str "from server, acting on " (str topic)))
-  [topic])
+; handling messages that come from the server
+(defmulti event-msg-handler
+  (fn [[topic data]]
+    ; (util/log (str "from server, acting on " (str topic)))
+    [topic]))
 
-(defmulti event-msg-handler event-dispatcher-fn)
 (defn     event-msg-handler* [{:as ev-msg :keys [id ?data event]}]
   ; (.log js/console "Event: %s" (str ?data))
   ; (.log js/console "Id: %s" (str id))
@@ -44,30 +45,21 @@
   [event]
   (.log js/console "Unhandled event: %s" (str event)))
 
+
 (defonce router_ (atom nil))
 (defn stop-router! [] (when-let [stop-f @router_] (stop-f)))
+
 (defn start-router! []
   (stop-router!)
   (reset! router_ (sente/start-chsk-router! ch-chsk event-msg-handler*)))
 ;; done setting up sente
 
-(defn show-gui! []
-  (.log js/console "Loading GUI")
-  (om/root
-    ui/main-view
-    app-state
-    {:target (. js/document (getElementById "app"))
-     :shared {:actions actions :send chsk-send!}}))
 
-(defn dispatcher-fn [[topic message]]
-  ; (util/log (str "acting on " (str topic)))
-  [topic])
-
-(defmulti action-dispatcher! dispatcher-fn)
-
-;; TODO: integrate into dispatcher
-; (sender [:hackatron/button {:foo "bar"}])
-; (sender [:hackatron/button2 {:bar "foo"}] 5000 (fn [cb-reply] (.log js/console "Callback reply: %s" (str cb-reply))))
+; handling messages that come from the GUI
+(defmulti action-dispatcher!
+  (fn [[topic message]]
+    ; (util/log (str "acting on " (str topic)))
+    [topic]))
 
 (defmethod action-dispatcher! [:hackatron/add]
   [[topic message]]
@@ -93,11 +85,15 @@
 
 
 (defonce actionchan_ (atom nil))
+(defonce actions (chan))
 (defn stop-action-dispatcher! [] (when-let [ch @actionchan_] (put! actions [:stop])))
+
 (defn start-action-dispatcher! []
   (stop-action-dispatcher!)
   (reset! actionchan_ (util/action-loop action-dispatcher! actions)))
 
+
+; handle logging in
 (defn login! [_ _ _ new-chsk-state]
   (let [uid (:uid new-chsk-state)
         url-hash (.-hash (.-location js/document))
@@ -121,6 +117,18 @@
         (swap! app-state assoc :state :logged-in :uid uid)
         (remove-watch chsk-state :login)))))
 
+
+; show that GUI
+(defn show-gui! []
+  (.log js/console "Loading GUI")
+  (om/root
+    ui/main-view
+    app-state
+    {:target (. js/document (getElementById "app"))
+     :shared {:actions actions :send chsk-send!}}))
+
+
+; define major initialization steps
 (defn start! []
   (start-action-dispatcher!)
   (start-router!)
@@ -128,4 +136,6 @@
   (add-watch chsk-state :login login!)
   (show-gui!))
 
+
+; start the magic
 (start!)
