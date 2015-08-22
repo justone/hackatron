@@ -7,29 +7,29 @@
   :test-paths ["test/clj"]
   :dependencies [
                  ;; clj
-                 [org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript  "0.0-3211"]
-                 [ring "1.3.1"]
+                 [org.clojure/clojure "1.7.0"]
+                 [org.clojure/clojurescript "1.7.48"]
+                 [ring "1.4.0"]
                  [http-kit "2.1.19"]
-                 [ring/ring-defaults "0.1.2"]
-                 [compojure "1.2.0"]
+                 [ring/ring-defaults "0.1.5"]
+                 [compojure "1.4.0"]
                  [hiccup "1.0.5"]
-                 [org.danielsz/system "0.1.8"]
+                 [org.danielsz/system "0.1.9"]
                  [environ "1.0.0"]
-                 [org.clojure/tools.nrepl "0.2.5"]
+                 [org.clojure/tools.nrepl "0.2.10"]
                  [io.forward/sendgrid-clj "1.0"]
                  [com.taoensso/sente "1.6.0"]
                  [com.taoensso/carmine "2.11.1"]
-                 [com.cognitect/transit-clj "0.8.275"]
+                 [com.cognitect/transit-clj "0.8.281"]
 
                  ;; cljs
                  [com.cognitect/transit-cljs "0.8.220"]
                  [org.omcljs/om "0.8.8"]
-                 [racehub/om-bootstrap "0.5.1"]
-                 [prismatic/om-tools "0.3.11"]]
+                 [racehub/om-bootstrap "0.5.3"]
+                 [prismatic/om-tools "0.3.12"]]
   :plugins [[lein-environ "1.0.0"]
-            [lein-cljsbuild  "1.0.5"]
-            [lein-figwheel  "0.3.5"]]
+            [lein-cljsbuild "1.0.6"]
+            [lein-figwheel "0.3.7"]]
   :clean-targets ^{:protect false} [:target-path "resources/public/cljs" "resources/public/cljs/out-prod"]
   :profiles {:dev {:source-paths ["dev"]
                    :env {:http-port 3000}}
@@ -37,7 +37,7 @@
                           :repl-port 8001}
                     ; unfortunately, deps here don't work
                     ; https://github.com/technomancy/leiningen/issues/1763
-                    :dependencies [[org.clojure/tools.nrepl "0.2.5"]]}
+                    :dependencies [[org.clojure/tools.nrepl "0.2.10"]]}
              :uberjar {:aot :all}}
   :cljsbuild {
               :builds [{:id "dev"
