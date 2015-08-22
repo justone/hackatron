@@ -81,17 +81,16 @@
   [[topic message]]
   (util/log (str "no dispatching for " topic)))
 
-(defmethod action-dispatcher! [:hackatron/login]
+(defmethod action-dispatcher! [:hackatron/send-email]
   [[topic message :as act]]
   (do
-    (util/log (str "Sending login email to " (:email @app-state)))
-    (util/log (str @chsk-state))
     (sente/ajax-call "/send_login_email"
                      {:method :post
                       :params {:email-address  (str (:email @app-state))
                                :csrf-token (:csrf-token @chsk-state)}}
                      (fn [ajax-resp]
-                       (print (str "Ajax login response: %s" ajax-resp))))))
+                       (swap! app-state assoc :state :email-sent)))))
+
 
 (defonce actionchan_ (atom nil))
 (defn stop-action-dispatcher! [] (when-let [ch @actionchan_] (put! actions [:stop])))
