@@ -6,7 +6,7 @@
    [ring.util.response :refer [response redirect]]
    [ring.middleware.session.cookie :refer [cookie-store]]
    [taoensso.timbre :as timbre :refer (tracef debugf infof warnf errorf)]
-   [hackatron.data :refer [dset dget]]
+   [hackatron.data :refer [inc-counter check-email-token new-email-token]]
    [hackatron.html :as html]
    [hackatron.utils :as utils]
    [reloaded.repl :refer [system]]))
@@ -16,18 +16,16 @@
 
 ; TODO: check for validity of email domain
 (defn send-login-email! [params data notifier]
-  (let [login-token (utils/random-string 32)
-        email (:email-address params)]
-    (do
-      (dset data (str "login:" login-token) email)
-      (notifier :login-email email {:token login-token})))
-  {:status 200})
+  (let [email (:email-address params)
+        login-token (new-email-token data email)]
+    (notifier :login-email email {:token login-token})
+    {:status 200}))
 
 ; TODO: remove the login token once used
 (defn login! [session params data]
   (let [login-token (:login-token params)]
-    (when-let [email (dget data (str "login:" login-token))]
-      {:status 200 :session  (assoc session :uid email)})))
+    (when-let [email (check-email-token data login-token)]
+      {:status 200 :session (assoc session :uid email)})))
 
 (defroutes routes
   ;; load the UI
@@ -44,14 +42,6 @@
           session
           params
           (:data services)))
-
-  ;; test routes
-  (GET "/send" {:keys [services params]} (do
-                                            ((:notifier services) {:to "nate@endot.org" :from "nate@endot.org" :subject "Test email 2" :text "Test Email" :html "<h1>Test Email</h1>"})
-                                            (response "sent")))
-  (GET "/inc" {:keys [services params]} (do
-                                          (dset (:data services) "other" {:foo "bar" :set #{true false}})
-                                          (response "set")))
 
   ;; sente specific
   (GET  "/dump"  req (str @(:connected-uids (:sente system))))

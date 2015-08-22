@@ -2,5 +2,6 @@
 
 (defprotocol DataStore
   "A protocol for data storage"
-  (dset [this k data] "Store data at the specified key k.")
-  (dget [this k] "Retrieve data for the specified key k."))
+  (new-email-token [this email] "Create and store new token for the given email address, return the token.")
+  (check-email-token [this token] "Check the token against the database and return the email address")
+  (inc-counter [this] "Increment the counter"))

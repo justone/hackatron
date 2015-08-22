@@ -1,10 +1,16 @@
 (ns hackatron.data.redis
   (:require [hackatron.data :as data]
+            [hackatron.utils :as utils]
             [taoensso.carmine :as car :refer (wcar)]))
 
 (defrecord RedisData [opts]
   data/DataStore
-  (dset [this k data]
-    (car/wcar (:opts this) (car/set (name k) data)))
-  (dget [this k]
-    (car/wcar (:opts this) (car/get (name k)))))
+  (new-email-token [this email]
+    (let [login-token (utils/random-string 32)]
+      (car/wcar (:opts this) (car/set (str "login-token:" login-token) email))
+      login-token))
+  (check-email-token [this token]
+    (when-let [email (car/wcar (:opts this) (car/get (str "login-token:" token)))]
+      email))
+  (inc-counter [this]
+    (println "incrementing counter!")))
