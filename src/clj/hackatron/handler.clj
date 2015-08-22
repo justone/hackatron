@@ -5,7 +5,7 @@
    [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
    [ring.util.response :refer [response redirect]]
    [ring.middleware.session.cookie :refer [cookie-store]]
-   [taoensso.timbre    :as timbre :refer (tracef debugf infof warnf errorf)]
+   [taoensso.timbre :as timbre :refer (tracef debugf infof warnf errorf)]
    [hackatron.data :refer [dset dget]]
    [hackatron.html :as html]
    [hackatron.utils :as utils]
@@ -100,7 +100,7 @@
   (let [session (:session ring-req)
         uid     (:uid     session)
         sender  (:chsk-send! (:sente system))]
-    (debugf "Get event called: %s" @(:connected-uids (:sente system)))
+    ; (debugf "Get event called: %s" uid)
     (sender uid [:hackatron/state @server-state])))
 
 (defmethod event-msg-handler :default ; Fallback

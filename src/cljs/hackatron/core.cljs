@@ -115,6 +115,7 @@
       (do
         (println "already logged in!")
         (swap! app-state assoc :state :logged-in :uid uid)
+        (put! actions [:hackatron/get]) ; request the latest data
         (remove-watch chsk-state :login)))))
 
 

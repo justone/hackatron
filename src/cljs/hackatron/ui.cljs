@@ -54,8 +54,7 @@
         (dom/div
           (dom/h3 (str "Logged in as " (:uid state) "."))
           (dom/h2 (str "Count is: " (:count state)))
-          (input-button "Add" #(put! actions [:hackatron/add]))
-          (input-button "Fetch" #(put! actions [:hackatron/get])))))))
+          (input-button "Add" #(put! actions [:hackatron/add])))))))
 
 (defn main-view [state owner]
   (reify
