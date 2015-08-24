@@ -12,5 +12,7 @@
   (check-email-token [this token]
     (when-let [email (car/wcar (:opts this) (car/get (str "login-token:" token)))]
       email))
+  (get-counter [this]
+    (car/wcar (:opts this) (car/get "counter")))
   (inc-counter [this]
-    (println "incrementing counter!")))
+    (car/wcar (:opts this) (car/incr "counter"))))
