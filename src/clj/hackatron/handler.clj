@@ -8,15 +8,18 @@
    [taoensso.timbre :as timbre :refer (tracef debugf infof warnf errorf)]
    [hackatron.data :refer [inc-counter get-counter check-email-token new-email-token]]
    [hackatron.html :as html]
+   [hackatron.common :refer [valid-email?]]
    [hackatron.utils :as utils]
    [reloaded.repl :refer [system]]))
 
 ; TODO: check for validity of email domain
 (defn send-login-email! [params data notifier]
-  (let [email (:email-address params)
-        login-token (new-email-token data email)]
-    (notifier :login-email email {:token login-token})
-    {:status 200}))
+  (let [email (:email-address params)]
+    (if (valid-email? email)
+      (let [login-token (new-email-token data email)]
+        (notifier :login-email email {:token login-token})
+        {:status 200})
+      {:status 400})))
 
 ; TODO: remove the login token once used
 (defn login! [session params data]

@@ -3,8 +3,8 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :source-paths ["src/clj"]
-  :test-paths ["test/clj"]
+  :source-paths ["src/clj" "src/cljc"]
+  :test-paths ["test/clj" "src/cljc"]
   :dependencies [
                  ;; clj
                  [org.clojure/clojure "1.7.0"]
@@ -41,7 +41,7 @@
              :uberjar {:aot :all}}
   :cljsbuild {
               :builds [{:id "dev"
-                        :source-paths ["src/cljs"]
+                        :source-paths ["src/cljs" "src/cljc"]
                         :figwheel {
                                    :websocket-host ~(or (System/getenv "FIG_HOST") "localhost")
                                    :on-jsload "hackatron.core/show-gui!"
@@ -53,7 +53,7 @@
                                    :source-map true}
                         }
                        {:id "prod"
-                        :source-paths ["src/cljs"]
+                        :source-paths ["src/cljs" "src/cljc"]
                         :compiler {:main hackatron.core
                                    :cache-analysis true
                                    :optimizations :advanced

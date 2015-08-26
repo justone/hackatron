@@ -3,6 +3,7 @@
             [om.core :as om]
             [clojure.string :as string]
             [hackatron.ui :as ui]
+            [hackatron.common :refer [valid-email?]]
             [taoensso.sente :as sente :refer (cb-success?)]
             [cljs.core.async :refer [chan <! put!]]))
 
@@ -75,13 +76,18 @@
 
 (defmethod action-dispatcher! [:hackatron/send-email]
   [[topic message :as act]]
-  (do
-    (sente/ajax-call "/send_login_email"
-                     {:method :post
-                      :params {:email-address  (str (:email @app-state))
-                               :csrf-token (:csrf-token @chsk-state)}}
-                     (fn [ajax-resp]
-                       (swap! app-state assoc :state :email-sent)))))
+  (let [email (:email @app-state)]
+    (if (valid-email? email)
+      (sente/ajax-call "/send_login_email"
+                       {:method :post
+                        :params {:email-address  (str (:email @app-state))
+                                 :csrf-token (:csrf-token @chsk-state)}}
+                       (fn [ajax-resp]
+                         (if (:success? ajax-resp)
+                           (swap! app-state assoc :state :email-sent)
+                           (println "error sending email"))))
+      (do
+        (println "email was invalid")))))
 
 
 (defonce actionchan_ (atom nil))
