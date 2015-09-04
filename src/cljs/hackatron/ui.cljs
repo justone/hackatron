@@ -4,6 +4,7 @@
             [om-bootstrap.button :as obb]
             [om-bootstrap.input :as obi]
             [om-bootstrap.random :as obr]
+            [om-bootstrap.nav :as obn]
             [om-tools.dom :as dom :include-macros true]
             [cljs.core.async :refer [put!]]))
 
@@ -48,9 +49,9 @@
           (dom/h3 "Email sent!")
           (dom/div "Email sent to " (dom/b email) ", please check it for your login link."))))))
 
-(defn top [state owner]
+(defn add [state owner]
   (reify
-    om/IDisplayName (display-name [this] "TopView")
+    om/IDisplayName (display-name [this] "AddView")
     om/IRender
     (render [this]
       (let [actions (om/get-shared owner :actions)]
@@ -58,6 +59,34 @@
           (dom/h3 (str "Logged in as " (:uid state) "."))
           (dom/h2 (str "Count is: " (:count state)))
           (input-button "Add" #(put! actions [:hackatron/add])))))))
+
+(defn link-msg [e actions message]
+  (put! actions message)
+  (.preventDefault e)
+  nil)
+
+(defn top [state owner]
+  (reify
+    om/IDisplayName (display-name [this] "TopView")
+    om/IRender
+    (render [this]
+      (let [actions (om/get-shared owner :actions)]
+        (dom/div
+          (obn/navbar
+            {:brand "Hackatron"}
+            (obn/nav
+              {:collapsible? true}
+              (obn/nav-item {:key 1 :href "#" :on-click #(link-msg % actions [:hackatron/section :add])} "Add")
+              (obn/nav-item {:key 2 :href "#" :on-click #(link-msg % actions [:hackatron/section :other])} "Other")
+              (obb/dropdown {:navbar "right" :key 3, :title "Dropdown"}
+                            (obb/menu-item {:key 1} "Action")
+                            (obb/menu-item {:key 2} "Another action")
+                            (obb/menu-item {:key 3} "Something else here")
+                            (obb/menu-item {:divider? true})
+                            (obb/menu-item {:key 4} "Separated link"))))
+          (case (:state state)
+            :add (om/build add state)
+            (dom/div)))))))
 
 (defn main-view [state owner]
   (reify
@@ -67,4 +96,4 @@
       (case (:state state)
         :login (om/build login state)
         :email-sent (om/build email-sent state)
-        :logged-in (om/build top state)))))
+        (om/build top state)))))

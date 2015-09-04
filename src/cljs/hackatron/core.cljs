@@ -69,6 +69,10 @@
   [[topic message]]
   (chsk-send! [:hackatron/get {}]))
 
+(defmethod action-dispatcher! [:hackatron/section]
+  [[topic message]]
+  (swap! app-state assoc :state message))
+
 (defmethod action-dispatcher! :default
   [[topic message]]
   (util/log (str "no dispatching for " topic)))
