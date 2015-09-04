@@ -3,12 +3,13 @@
             [om.core :as om]
             [om-bootstrap.button :as obb]
             [om-bootstrap.input :as obi]
+            [om-bootstrap.random :as obr]
             [om-tools.dom :as dom :include-macros true]
             [cljs.core.async :refer [put!]]))
 
 (defn handle-change
-  [e cursor k]
-  (om/update! cursor [k] (.. e -target -value)))
+  [e cursor korks]
+  (om/update! cursor korks (.. e -target -value)))
 
 (defn input-text
   "An input text field, with a handler."
@@ -29,10 +30,12 @@
     om/IRender
     (render [this]
       (let [actions (om/get-shared owner :actions)
-            {:keys [email]} state]
+            {:keys [login-info]} state
+            {:keys [email error]} login-info]
         (dom/div
           (dom/h3 "Login to Hackatron")
-          (input-text "Email" email #(handle-change % state :email) {:id "email-field"})
+          (when error (obr/alert {:bs-style "warning"} error))
+          (input-text "Email" email #(handle-change % state [:login-info :email]) {:id "email-field" :bs-style (if error "error" "standard")})
           (input-button "Send Login Email" #(put! actions [:hackatron/send-email])))))))
 
 (defn email-sent [state owner]

@@ -13,7 +13,6 @@
 ; all the state
 (defonce app-state (atom {
                           :state :login
-                          :email ""
                           }))
 
 ;; set up sente
@@ -76,18 +75,19 @@
 
 (defmethod action-dispatcher! [:hackatron/send-email]
   [[topic message :as act]]
-  (let [email (:email @app-state)]
+  (let [login-info (:login-info @app-state)
+        email (:email login-info)]
     (if (valid-email? email)
       (sente/ajax-call "/send_login_email"
                        {:method :post
-                        :params {:email-address  (str (:email @app-state))
+                        :params {:email-address email
                                  :csrf-token (:csrf-token @chsk-state)}}
                        (fn [ajax-resp]
                          (if (:success? ajax-resp)
                            (swap! app-state assoc :state :email-sent)
                            (println "error sending email"))))
       (do
-        (println "email was invalid")))))
+        (swap! app-state assoc-in [:login-info :error] "Invalid Email")))))
 
 
 (defonce actionchan_ (atom nil))
