@@ -15,4 +15,10 @@
   (get-counter [this]
     (car/wcar (:opts this) (car/get "counter")))
   (inc-counter [this]
-    (car/wcar (:opts this) (car/incr "counter"))))
+    (car/wcar (:opts this) (car/incr "counter")))
+  (set-profile [this email profile]
+    (car/wcar (:opts this) (car/set (str "profile:" email) profile))
+    profile)
+  (get-profile [this email]
+    (when-let [profile (car/wcar (:opts this) (car/get (str "profile:" email)))]
+      profile)))

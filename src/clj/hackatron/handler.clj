@@ -8,6 +8,7 @@
    [taoensso.timbre :as timbre :refer (tracef debugf infof warnf errorf)]
    [hackatron.data :refer [inc-counter get-counter check-email-token new-email-token]]
    [hackatron.html :as html]
+   [hackatron.model :as m]
    [hackatron.common :refer [valid-email?]]
    [hackatron.utils :as utils]
    [reloaded.repl :refer [system]]))
@@ -86,14 +87,14 @@
     (debugf "Add event called: %s" @(:connected-uids (:sente system)))
     (dorun (map #(sender % [:hackatron/state {:count (get-counter data)}]) uids))))
 
-(defmethod event-msg-handler :hackatron/get
+(defmethod event-msg-handler :hackatron/get-logged-in
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
   (let [session (:session ring-req)
         uid     (:uid     session)
         sender  (:chsk-send! (:sente system))
-        data    (:data (:data system))]
-    ; (debugf "Get event called: %s" uid)
-    (sender uid [:hackatron/state {:count (get-counter data)}])))
+        data    (:data (:data system))
+        user    (m/get-profile data uid)]
+    (sender uid [:hackatron/state {:state :logged-in :profile user :count (get-counter data)}])))
 
 (defmethod event-msg-handler :default ; Fallback
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]

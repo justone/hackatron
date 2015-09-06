@@ -77,16 +77,13 @@
             (obn/nav
               {:collapsible? true}
               (obn/nav-item {:key 1 :href "#" :on-click #(link-msg % actions [:hackatron/section :add])} "Add")
-              (obn/nav-item {:key 2 :href "#" :on-click #(link-msg % actions [:hackatron/section :other])} "Other")
-              (obb/dropdown {:navbar "right" :key 3, :title "Dropdown"}
-                            (obb/menu-item {:key 1} "Action")
-                            (obb/menu-item {:key 2} "Another action")
-                            (obb/menu-item {:key 3} "Something else here")
-                            (obb/menu-item {:divider? true})
-                            (obb/menu-item {:key 4} "Separated link"))))
+              (obn/nav-item {:key 1 :href "#" :on-click #(link-msg % actions [:hackatron/section :sign_up/select])} "Sign Up")
+              (when false (obb/dropdown {:navbar "right" :key 2, :title "Admin"}
+                            (obb/menu-item {:key 1 :on-click #(link-msg % actions [:hackatron/section :hackathon/add])} "Add Hackathon")))
+              (obn/nav-item {:key 1 :href "#" :on-click #(link-msg % actions [:hackatron/section :profile/main])} "Profile")))
           (case (:state state)
             :add (om/build add state)
-            (dom/div)))))))
+            (dom/div (str (:state state)))))))))
 
 (defn main-view [state owner]
   (reify
@@ -95,5 +92,6 @@
     (render [this]
       (case (:state state)
         :login (om/build login state)
+        :logging-in (dom/div "Logging in...")
         :email-sent (om/build email-sent state)
         (om/build top state)))))

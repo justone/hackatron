@@ -39,7 +39,7 @@
 (defmethod event-msg-handler [:hackatron/state]
   [[event data]]
   ; (.log js/console "Update to state!" (str event))
-  (swap! app-state assoc :count (:count data)))
+  (swap! app-state merge data))
 
 (defmethod event-msg-handler :default ; Fallback
   [event]
@@ -65,9 +65,9 @@
   [[topic message]]
   (chsk-send! [:hackatron/add {}]))
 
-(defmethod action-dispatcher! [:hackatron/get]
+(defmethod action-dispatcher! [:hackatron/get-logged-in]
   [[topic message]]
-  (chsk-send! [:hackatron/get {}]))
+  (chsk-send! [:hackatron/get-logged-in {}]))
 
 (defmethod action-dispatcher! [:hackatron/section]
   [[topic message]]
@@ -120,12 +120,12 @@
                          (fn [ajax-resp]
                            (when (= (:?status ajax-resp) 200)
                              (println "logged in now!")
-                             (swap! app-state assoc :state :logged-in :uid uid)
+                             (swap! app-state assoc :state :logging-in :uid uid)
                              (sente/chsk-reconnect! chsk)))))
       (do
         (println "already logged in!")
-        (swap! app-state assoc :state :logged-in :uid uid)
-        (put! actions [:hackatron/get]) ; request the latest data
+        (swap! app-state assoc :state :logging-in :uid uid)
+        (put! actions [:hackatron/get-logged-in]) ; request logged-in data information
         (remove-watch chsk-state :login)))))
 
 
