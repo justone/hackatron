@@ -15,7 +15,15 @@
 (defn input-text
   "An input text field, with a handler."
   [name value handler & [attributes]]
-  (obi/input (merge {:type "text" :placeholder name :value value :on-change handler} attributes)))
+  (obi/input (merge
+               {:type "text"
+                :label name
+                :placeholder name
+                :label-classname "col-xs-1"
+                :wrapper-classname "col-xs-7"
+                :value value
+                :on-change handler}
+               attributes)))
 
 (defn input-button
   "An input button, with a handler.  Prevents default event handling."
@@ -36,8 +44,14 @@
         (dom/div
           (dom/h3 "Login to Hackatron")
           (when error (obr/alert {:bs-style "warning"} error))
-          (input-text "Email" email #(handle-change % state [:login-info :email]) {:id "email-field" :bs-style (if error "error" "standard")})
-          (input-button "Send Login Email" #(put! actions [:hackatron/send-email])))))))
+          (dom/form {:class "form-vertical"}
+                    (input-text
+                      "Email" email
+                      #(handle-change % state [:login-info :email])
+                      {:id "email-field" :bs-style (if error "error" "standard") :label nil})
+                    (input-button
+                      "Send Login Email"
+                      #(put! actions [:hackatron/send-email]))))))))
 
 (defn email-sent [state owner]
   (reify
@@ -56,7 +70,6 @@
     (render [this]
       (let [actions (om/get-shared owner :actions)]
         (dom/div
-          (dom/h3 (str "Logged in as " (:uid state) "."))
           (dom/h2 (str "Count is: " (:count state)))
           (input-button "Add" #(put! actions [:hackatron/add])))))))
 
@@ -69,9 +82,18 @@
             {:keys [profile]} state
             {:keys [name access error]} profile]
         (dom/div
-          (dom/h3 "Edit Profile")
-          (input-text "Name" name #(handle-change % state [:profile :name]) {:id "email-field" :bs-style (if error "error" "standard")})
-          (input-button "Save" #(put! actions [:hackatron/save-profile])))))))
+          (dom/form {:class "form-horizontal"}
+                    (input-text
+                      "Email"
+                      (:uid state)
+                      identity
+                      {:id "email-field" :disabled true})
+                    (input-text
+                      "Name"
+                      name
+                      #(handle-change % state [:profile :name])
+                      {:id "name-field" :bs-style (if error "error" "default") :feedback? true})
+                    (input-button "Save" #(put! actions [:hackatron/save-profile]))))))))
 
 (defn link-msg [e actions message]
   (put! actions message)
