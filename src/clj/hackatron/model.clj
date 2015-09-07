@@ -9,3 +9,6 @@
     (let [profile {:access :normal
                    :name ""}]
       (data/set-profile data email profile))))
+
+(defn set-profile [data email profile]
+  (data/set-profile data email profile))

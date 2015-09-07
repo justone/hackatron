@@ -96,11 +96,23 @@
         user    (m/get-profile data uid)]
     (sender uid [:hackatron/state {:state :logged-in :profile user :count (get-counter data)}])))
 
+(defmethod event-msg-handler :hackatron/save-profile
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
+  (let [session (:session ring-req)
+        sender  (:chsk-send! (:sente system))
+        uid     (:uid     session)
+        data    (:data (:data system))
+        user    (m/get-profile data uid)
+        name    (:name ?data)]
+    (if (seq name)
+      (let [new-profile (m/set-profile data uid (merge user {:name name}))]
+        (sender uid [:hackatron/state {:profile new-profile}])))))
+
 (defmethod event-msg-handler :default ; Fallback
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
   (let [session (:session ring-req)
         uid     (:uid     session)]
-    ; (debugf "Unhandled event: %s" event)
+    (debugf "Unhandled event: %s" event)
     ; (debugf "from: %s" (:session (:ring-req ev-msg)))
     (when ?reply-fn
       (?reply-fn {:umatched-event-as-echoed-from-from-server event}))))

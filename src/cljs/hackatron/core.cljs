@@ -73,6 +73,13 @@
   [[topic message]]
   (swap! app-state assoc :state message))
 
+(defmethod action-dispatcher! [:hackatron/save-profile]
+  [[topic message]]
+  (let [name (get-in @app-state [:profile :name])]
+    (if (seq name)
+      (chsk-send! [:hackatron/save-profile {:name name}])
+      (swap! app-state assoc-in [:profile :error] "Invalid name"))))
+
 (defmethod action-dispatcher! :default
   [[topic message]]
   (util/log (str "no dispatching for " topic)))

@@ -60,6 +60,19 @@
           (dom/h2 (str "Count is: " (:count state)))
           (input-button "Add" #(put! actions [:hackatron/add])))))))
 
+(defn profile-main [state owner]
+  (reify
+    om/IDisplayName (display-name [this] "ProfileMain")
+    om/IRender
+    (render [this]
+      (let [actions (om/get-shared owner :actions)
+            {:keys [profile]} state
+            {:keys [name access error]} profile]
+        (dom/div
+          (dom/h3 "Edit Profile")
+          (input-text "Name" name #(handle-change % state [:profile :name]) {:id "email-field" :bs-style (if error "error" "standard")})
+          (input-button "Save" #(put! actions [:hackatron/save-profile])))))))
+
 (defn link-msg [e actions message]
   (put! actions message)
   (.preventDefault e)
@@ -83,6 +96,7 @@
               (obn/nav-item {:key 1 :href "#" :on-click #(link-msg % actions [:hackatron/section :profile/main])} "Profile")))
           (case (:state state)
             :add (om/build add state)
+            :profile/main (om/build profile-main state)
             (dom/div (str (:state state)))))))))
 
 (defn main-view [state owner]
