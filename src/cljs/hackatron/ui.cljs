@@ -19,8 +19,8 @@
                {:type "text"
                 :label name
                 :placeholder name
-                :label-classname "col-xs-1"
-                :wrapper-classname "col-xs-7"
+                :label-classname "col-xs-2"
+                :wrapper-classname "col-xs-10"
                 :value value
                 :on-change handler}
                attributes)))
