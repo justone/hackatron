@@ -112,7 +112,7 @@
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
   (let [session (:session ring-req)
         uid     (:uid     session)]
-    (debugf "Unhandled event: %s" event)
+    ; (debugf "Unhandled event: %s" event)
     ; (debugf "from: %s" (:session (:ring-req ev-msg)))
     (when ?reply-fn
       (?reply-fn {:umatched-event-as-echoed-from-from-server event}))))

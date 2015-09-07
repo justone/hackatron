@@ -16,6 +16,11 @@
     (car/wcar (:opts this) (car/get "counter")))
   (inc-counter [this]
     (car/wcar (:opts this) (car/incr "counter")))
+  (all-profiles [this]
+    (->> (car/wcar (:opts this) (car/keys "profile:*"))
+         (map #(clojure.string/replace % #"profile:" ""))
+         (map #(vector % (data/get-profile this %)))
+         (into {})))
   (set-profile [this email profile]
     (car/wcar (:opts this) (car/set (str "profile:" email) profile))
     profile)

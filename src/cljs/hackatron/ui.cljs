@@ -93,6 +93,11 @@
                       name
                       #(handle-change % state [:profile :name])
                       {:id "name-field" :bs-style (if error "error" "default") :feedback? true})
+                    (input-text
+                      "Access"
+                      access
+                      identity
+                      {:id "access-field" :disabled true})
                     (input-button "Save" #(put! actions [:hackatron/save-profile]))))))))
 
 (defn link-msg [e actions message]
@@ -105,7 +110,8 @@
     om/IDisplayName (display-name [this] "TopView")
     om/IRender
     (render [this]
-      (let [actions (om/get-shared owner :actions)]
+      (let [actions (om/get-shared owner :actions)
+            profile (:profile state)]
         (dom/div
           (obn/navbar
             {:brand "Hackatron"}
@@ -113,8 +119,8 @@
               {:collapsible? true}
               (obn/nav-item {:key 1 :href "#" :on-click #(link-msg % actions [:hackatron/section :add])} "Add")
               (obn/nav-item {:key 1 :href "#" :on-click #(link-msg % actions [:hackatron/section :sign_up/select])} "Sign Up")
-              (when false (obb/dropdown {:navbar "right" :key 2, :title "Admin"}
-                            (obb/menu-item {:key 1 :on-click #(link-msg % actions [:hackatron/section :hackathon/add])} "Add Hackathon")))
+              (when (= :admin (:access profile)) 
+                (obn/nav-item {:key 1 :href "#" :on-click #(link-msg % actions [:hackatron/section :hackathon/create])} "Create Hackathon"))
               (obn/nav-item {:key 1 :href "#" :on-click #(link-msg % actions [:hackatron/section :profile/main])} "Profile")))
           (case (:state state)
             :add (om/build add state)

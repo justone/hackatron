@@ -6,5 +6,6 @@
   (check-email-token [this token] "Check the token against the database and return the email address")
   (get-counter [this] "Retrieve the counter")
   (inc-counter [this] "Increment the counter")
+  (all-profiles [this] "Retrieve all profiles")
   (get-profile [this email] "Retrieve a user profile")
   (set-profile [this email profile] "Save a user profile"))
