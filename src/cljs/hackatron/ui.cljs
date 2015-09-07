@@ -58,7 +58,7 @@
     om/IDisplayName (display-name [this] "EmailSent")
     om/IRender
     (render [this]
-      (let [{:keys [email]} state]
+      (let [email (get-in state [:login-info :email])]
         (dom/div
           (dom/h3 "Email sent!")
           (dom/div "Email sent to " (dom/b email) ", please check it for your login link."))))))
