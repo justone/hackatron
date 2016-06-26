@@ -11,7 +11,7 @@
    [hackatron.model :as m]
    [hackatron.common :refer [valid-email?]]
    [hackatron.utils :as utils]
-   [reloaded.repl :refer [system]]))
+   [system.repl :refer [system]]))
 
 ; TODO: check for validity of email domain
 (defn send-login-email! [params data notifier]
